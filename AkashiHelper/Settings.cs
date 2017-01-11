@@ -9,5 +9,6 @@ namespace AkashiHelper
 	public class Settings
 	{
 		public List<int> filteredEquipmentIds { get; set; } = new List<int>();
+		public bool filterByAvailability { get; set; } = true;
 	}
 }

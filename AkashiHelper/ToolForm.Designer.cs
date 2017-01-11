@@ -28,29 +28,32 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+			System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
 			this.tableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
 			this.comboBoxWeekday = new System.Windows.Forms.ComboBox();
 			this.buttonFilter = new System.Windows.Forms.Button();
 			this.buttonUpdate = new System.Windows.Forms.Button();
 			this.dataGridView = new System.Windows.Forms.DataGridView();
 			this.linkLabelKCWiki = new System.Windows.Forms.LinkLabel();
+			this.checkBoxFilterByAvailability = new System.Windows.Forms.CheckBox();
 			this.tableLayoutPanel.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// tableLayoutPanel
 			// 
-			this.tableLayoutPanel.ColumnCount = 4;
+			this.tableLayoutPanel.ColumnCount = 5;
 			this.tableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
 			this.tableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this.tableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
 			this.tableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+			this.tableLayoutPanel.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
 			this.tableLayoutPanel.Controls.Add(this.comboBoxWeekday, 0, 0);
-			this.tableLayoutPanel.Controls.Add(this.buttonFilter, 2, 0);
-			this.tableLayoutPanel.Controls.Add(this.buttonUpdate, 3, 0);
+			this.tableLayoutPanel.Controls.Add(this.buttonFilter, 3, 0);
+			this.tableLayoutPanel.Controls.Add(this.buttonUpdate, 4, 0);
 			this.tableLayoutPanel.Controls.Add(this.dataGridView, 0, 1);
 			this.tableLayoutPanel.Controls.Add(this.linkLabelKCWiki, 0, 2);
+			this.tableLayoutPanel.Controls.Add(this.checkBoxFilterByAvailability, 2, 0);
 			this.tableLayoutPanel.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.tableLayoutPanel.Location = new System.Drawing.Point(0, 0);
 			this.tableLayoutPanel.Name = "tableLayoutPanel";
@@ -102,15 +105,15 @@
 			this.dataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
 			this.dataGridView.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
 			this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-			this.tableLayoutPanel.SetColumnSpan(this.dataGridView, 4);
-			dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-			dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
-			dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
-			dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-			dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-			dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-			this.dataGridView.DefaultCellStyle = dataGridViewCellStyle2;
+			this.tableLayoutPanel.SetColumnSpan(this.dataGridView, 5);
+			dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+			dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window;
+			dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText;
+			dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+			dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+			dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+			this.dataGridView.DefaultCellStyle = dataGridViewCellStyle4;
 			this.dataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.dataGridView.Location = new System.Drawing.Point(3, 32);
 			this.dataGridView.MultiSelect = false;
@@ -124,7 +127,7 @@
 			// linkLabelKCWiki
 			// 
 			this.linkLabelKCWiki.AutoSize = true;
-			this.tableLayoutPanel.SetColumnSpan(this.linkLabelKCWiki, 4);
+			this.tableLayoutPanel.SetColumnSpan(this.linkLabelKCWiki, 5);
 			this.linkLabelKCWiki.Location = new System.Drawing.Point(3, 348);
 			this.linkLabelKCWiki.Name = "linkLabelKCWiki";
 			this.linkLabelKCWiki.Size = new System.Drawing.Size(135, 13);
@@ -132,6 +135,18 @@
 			this.linkLabelKCWiki.TabStop = true;
 			this.linkLabelKCWiki.Text = "Data from kcwikizh/kcdata";
 			this.linkLabelKCWiki.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabelKCWiki_LinkClicked);
+			// 
+			// checkBoxFilterByAvailability
+			// 
+			this.checkBoxFilterByAvailability.AutoSize = true;
+			this.checkBoxFilterByAvailability.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.checkBoxFilterByAvailability.Location = new System.Drawing.Point(263, 3);
+			this.checkBoxFilterByAvailability.Name = "checkBoxFilterByAvailability";
+			this.checkBoxFilterByAvailability.Size = new System.Drawing.Size(153, 23);
+			this.checkBoxFilterByAvailability.TabIndex = 5;
+			this.checkBoxFilterByAvailability.Text = "Show only possible recipes";
+			this.checkBoxFilterByAvailability.UseVisualStyleBackColor = true;
+			this.checkBoxFilterByAvailability.CheckedChanged += new System.EventHandler(this.checkBoxFilterByAvailability_CheckedChanged);
 			// 
 			// ToolForm
 			// 
@@ -157,5 +172,6 @@
 		private System.Windows.Forms.Button buttonUpdate;
 		private System.Windows.Forms.DataGridView dataGridView;
 		private System.Windows.Forms.LinkLabel linkLabelKCWiki;
+		private System.Windows.Forms.CheckBox checkBoxFilterByAvailability;
 	}
 }

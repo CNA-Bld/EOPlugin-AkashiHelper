@@ -58,6 +58,8 @@ namespace AkashiHelper
 			dataGridView.Columns.Add("Ship", "二番艦");
 			dataGridView.Columns.Add("Refresh", "⇒");
 
+			checkBoxFilterByAvailability.Checked = plugin.settings.filterByAvailability;
+
 			loadData();
 			RefreshData();
 		}
@@ -124,8 +126,15 @@ namespace AkashiHelper
 
 			foreach (var equipment in json)
 			{
+				if (plugin.settings.filteredEquipmentIds.Contains((int) equipment["id"]))
+					continue;
+
+				if (plugin.settings.filterByAvailability)
+					if (KCDatabase.Instance.Equipments.Values.All(i => i.EquipmentID != (int) equipment["id"]))
+						continue;
+
 				var improvements = equipment["improvement"];
-				if (!plugin.settings.filteredEquipmentIds.Contains((int) equipment["id"]) && improvements != null)
+				if (improvements != null)
 				{
 					foreach (var improvement in improvements)
 					{
@@ -250,6 +259,17 @@ namespace AkashiHelper
 		{
 			if (ready)
 				new FilterForm(ImprovableEquipments, this, plugin).Show();
+		}
+
+		private void checkBoxFilterByAvailability_CheckedChanged(object sender, EventArgs e)
+		{
+			bool flag = plugin.settings.filterByAvailability != checkBoxFilterByAvailability.Checked;
+			if (flag)
+			{
+				plugin.settings.filterByAvailability = checkBoxFilterByAvailability.Checked;
+				plugin.SaveSettings();
+				RefreshData();
+			}
 		}
 	}
 }
