@@ -59,7 +59,7 @@
 			this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
 			this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
 			this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-			this.tableLayoutPanel.Size = new System.Drawing.Size(284, 261);
+			this.tableLayoutPanel.Size = new System.Drawing.Size(484, 261);
 			this.tableLayoutPanel.TabIndex = 0;
 			// 
 			// buttonSelectAll
@@ -93,7 +93,7 @@
 			this.buttonSave.AutoSize = true;
 			this.buttonSave.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
 			this.buttonSave.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.buttonSave.Location = new System.Drawing.Point(183, 235);
+			this.buttonSave.Location = new System.Drawing.Point(383, 235);
 			this.buttonSave.Name = "buttonSave";
 			this.buttonSave.Size = new System.Drawing.Size(42, 23);
 			this.buttonSave.TabIndex = 2;
@@ -106,7 +106,7 @@
 			this.buttonCancel.AutoSize = true;
 			this.buttonCancel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
 			this.buttonCancel.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.buttonCancel.Location = new System.Drawing.Point(231, 235);
+			this.buttonCancel.Location = new System.Drawing.Point(431, 235);
 			this.buttonCancel.Name = "buttonCancel";
 			this.buttonCancel.Size = new System.Drawing.Size(50, 23);
 			this.buttonCancel.TabIndex = 3;
@@ -123,7 +123,7 @@
 			this.checkedListBox.Location = new System.Drawing.Point(3, 16);
 			this.checkedListBox.MultiColumn = true;
 			this.checkedListBox.Name = "checkedListBox";
-			this.checkedListBox.Size = new System.Drawing.Size(278, 213);
+			this.checkedListBox.Size = new System.Drawing.Size(478, 213);
 			this.checkedListBox.TabIndex = 4;
 			// 
 			// label
@@ -140,7 +140,7 @@
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(284, 261);
+			this.ClientSize = new System.Drawing.Size(484, 261);
 			this.Controls.Add(this.tableLayoutPanel);
 			this.Name = "FilterForm";
 			this.Text = "Filter";
