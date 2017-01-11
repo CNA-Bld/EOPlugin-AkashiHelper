@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Codeplex.Data;
+using ElectronicObserver.Observer;
 
 namespace AkashiHelper
 {
@@ -13,13 +14,20 @@ namespace AkashiHelper
     {
 		private const string PLUGIN_SETTINGS = @"Settings\AkashiHelper.json";
 		public Settings settings;
+	    public bool isKCDBReady { get; private set; } = false;
 
 		public AkashiHelper()
 		{
 			settings = LoadSettings();
+			APIObserver.Instance["api_start2"].ResponseReceived += OnResponseReceived;
 		}
 
-		public override string MenuTitle => "AkashiHelper";
+	    private void OnResponseReceived(string apiname, dynamic data)
+	    {
+		    isKCDBReady = true;
+	    }
+
+	    public override string MenuTitle => "AkashiHelper";
 
 	    public override Form GetToolWindow()
 	    {

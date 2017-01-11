@@ -31,12 +31,18 @@ namespace AkashiHelper
 			this.plugin = plugin;
 		}
 
+		private void AlertAndClose()
+		{
+			MessageBox.Show("KCDatabase is not ready yet. Please start the game first.");
+			Close();
+		}
+
 		private void ToolForm_Load(object sender, EventArgs e)
 		{
-			if (!isKCDBReady())
+			if (!plugin.isKCDBReady)
 			{
-				MessageBox.Show("KCDatabase is not ready yet. Please start the game first.");
-				Close();
+				AlertAndClose();
+				return;
 			}
 
 			DayOfWeek today = (DateTime.UtcNow + new TimeSpan(9, 0, 0)).DayOfWeek;
@@ -119,7 +125,7 @@ namespace AkashiHelper
 
 		public void RefreshData()
 		{
-			if (!ready || !isKCDBReady())
+			if (!ready)
 				return;
 
 			dataGridView.Rows.Clear();
@@ -199,12 +205,28 @@ namespace AkashiHelper
 
 		private string getEquipmentName(dynamic id)
 		{
-			return KCDatabase.Instance.MasterEquipments[(int) id].Name;
+			try
+			{
+				return KCDatabase.Instance.MasterEquipments[(int)id].Name;
+			}
+			catch (NullReferenceException)
+			{
+				AlertAndClose();
+				return null;
+			}
 		}
 
 		private string getShipName(dynamic id)
 		{
-			return KCDatabase.Instance.MasterShips[(int) id].Name;
+			try
+			{
+				return KCDatabase.Instance.MasterShips[(int)id].Name;
+			}
+			catch (NullReferenceException)
+			{
+				AlertAndClose();
+				return null;
+			}
 		}
 
 		private string generateKitUsage(dynamic data)
@@ -216,12 +238,7 @@ namespace AkashiHelper
 		{
 			return data == null ? "-" : string.Format("{0}× {1}", data["amount"], getEquipmentName(data["id"]));
 		}
-
-		private bool isKCDBReady()
-		{
-			return (KCDatabase.Instance.MasterEquipments[1] != null);
-		}
-
+		
 		private DataGridViewTextBoxCell textToCell(string s)
 		{
 			return new DataGridViewTextBoxCell()
