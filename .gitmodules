@@ -1,0 +1,4 @@
+[submodule "ElectronicObserverExtended"]
+	path = ElectronicObserverExtended
+	url = https://github.com/CAWAS/ElectronicObserverExtended.git
+	branch = extended
