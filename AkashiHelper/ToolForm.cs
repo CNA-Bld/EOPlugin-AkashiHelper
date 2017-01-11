@@ -201,6 +201,12 @@ namespace AkashiHelper
 					}
 				}
 			}
+
+			foreach (DataGridViewColumn column in dataGridView.Columns)
+			{
+				column.Width = 200;
+			}
+			dataGridView.AutoResizeColumns();
 		}
 
 		private string getEquipmentName(dynamic id)
