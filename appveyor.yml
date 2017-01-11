@@ -1,0 +1,26 @@
+version: 1.0.0.{build}
+
+branches:
+    only:
+        - master
+
+assembly_info:
+    patch: true
+    file: AssemblyInfo.*
+    assembly_version: "1.0.0.{build}"
+    assembly_file_version: "{version}"
+    assembly_informational_version: "{version}"
+
+build:
+    project: AkashiHelper\AkashiHelper.sln
+
+before_build:
+    - git.exe submodule update --init --recursive
+    - nuget restore AkashiHelper\AkashiHelper.sln
+    - nuget restore ElectronicObserverExtended\ElectronicObserver.sln
+    - mkdir output
+    - ps: (Get-Content AkashiHelper\AkashiHelper.cs -Encoding UTF8).replace("<BUILD_VERSION>", "$env:APPVEYOR_BUILD_VERSION") | Set-Content AkashiHelper\AkashiHelper.cs -Encoding UTF8
+
+artifacts:
+    - path: output
+      name: AkashiHelper-$(APPVEYOR_BUILD_VERSION)

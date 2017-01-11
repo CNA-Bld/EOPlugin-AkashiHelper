@@ -16,6 +16,8 @@ namespace AkashiHelper
 		public Settings settings;
 	    public bool isKCDBReady { get; private set; } = false;
 
+		public override string Version { get { return "<BUILD_VERSION>"; } }
+
 		public AkashiHelper()
 		{
 			settings = LoadSettings();
