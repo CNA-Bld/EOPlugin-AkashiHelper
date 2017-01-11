@@ -22,10 +22,13 @@ namespace AkashiHelper
 		private static string JSON_PATH = @"Data\slotitem.json";
 		private static Uri JSON_URL = new Uri("https://kcwikizh.github.io/kcdata/slotitem/all.json");
 		private dynamic json;
+		private AkashiHelper plugin;
+		private List<int> ImprovableEquipments = new List<int>();
 
-		public ToolForm()
+		public ToolForm(AkashiHelper plugin)
 		{
 			InitializeComponent();
+			this.plugin = plugin;
 		}
 
 		private void ToolForm_Load(object sender, EventArgs e)
@@ -66,6 +69,14 @@ namespace AkashiHelper
 			if (File.Exists(JSON_PATH))
 			{
 				json = DynamicJson.Parse(File.ReadAllText(JSON_PATH));
+
+				ImprovableEquipments.Clear();
+				foreach (var equipment in json)
+				{
+					if (equipment["improvement"] != null)
+						ImprovableEquipments.Add((int)equipment["id"]);
+				}
+
 				ready = true;
 			}
 		}
@@ -104,7 +115,7 @@ namespace AkashiHelper
 			}
 		}
 
-		private void RefreshData()
+		public void RefreshData()
 		{
 			if (!ready || !isKCDBReady())
 				return;
@@ -114,7 +125,7 @@ namespace AkashiHelper
 			foreach (var equipment in json)
 			{
 				var improvements = equipment["improvement"];
-				if (improvements != null)
+				if (!plugin.settings.filteredEquipmentIds.Contains((int) equipment["id"]) && improvements != null)
 				{
 					foreach (var improvement in improvements)
 					{
@@ -233,6 +244,12 @@ namespace AkashiHelper
 		private void linkLabelKCWiki_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
 		{
 			Process.Start("http://kcwikizh.github.io/kcdata/");
+		}
+
+		private void buttonFilter_Click(object sender, EventArgs e)
+		{
+			if (ready)
+				new FilterForm(ImprovableEquipments, this, plugin).Show();
 		}
 	}
 }
