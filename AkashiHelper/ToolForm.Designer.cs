@@ -155,6 +155,7 @@
 			this.Controls.Add(this.tableLayoutPanel);
 			this.Name = "ToolForm";
 			this.Text = "AkashiHelper";
+			this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.ToolForm_FormClosed);
 			this.Load += new System.EventHandler(this.ToolForm_Load);
 			this.tableLayoutPanel.ResumeLayout(false);
 			this.tableLayoutPanel.PerformLayout();

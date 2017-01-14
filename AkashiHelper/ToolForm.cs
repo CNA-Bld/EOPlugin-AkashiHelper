@@ -261,9 +261,13 @@ namespace AkashiHelper
 			if (flag)
 			{
 				plugin.settings.filterByAvailability = checkBoxFilterByAvailability.Checked;
-				plugin.SaveSettings();
 				RefreshData();
 			}
+		}
+
+		private void ToolForm_FormClosed(object sender, FormClosedEventArgs e)
+		{
+			plugin.SaveSettings();
 		}
 	}
 }
