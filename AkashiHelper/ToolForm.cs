@@ -90,6 +90,8 @@ namespace AkashiHelper
 
 			dataGridView.Rows.Clear();
 
+			Dictionary<int, List<DataGridViewRow>> dictionary = new Dictionary<int, List<DataGridViewRow>>();
+
 			foreach (var equipment in plugin.json)
 			{
 				if (plugin.settings.filteredEquipmentIds.Contains((int) equipment.id))
@@ -102,6 +104,9 @@ namespace AkashiHelper
 				var improvements = equipment.improvement;
 				if (improvements != null)
 				{
+					int equipmentType = (int) equipment.type[3];
+					var image = ElectronicObserver.Resource.ResourceManager.Instance.Equipments.Images[equipmentType];
+
 					foreach (var improvement in improvements)
 					{
 						var thisDay = improvement.day[(int) comboBoxWeekday.SelectedValue];
@@ -112,7 +117,7 @@ namespace AkashiHelper
 							var dataGridViewRow = new DataGridViewRow();
 							dataGridViewRow.Cells.Add(new DataGridViewImageCell()
 							{
-								Value = ElectronicObserver.Resource.ResourceManager.Instance.Equipments.Images[(int) equipment.type[3]]
+								Value = image
 							});
 							dataGridViewRow.Cells.Add(textToCell(equipment.name));
 							dataGridViewRow.Cells.Add(textToCell(upgrade == null ? "初期\n★6" : "初期\n★6\n★max"));
@@ -156,11 +161,17 @@ namespace AkashiHelper
 							else
 								dataGridViewRow.Cells.Add(textToCell(""));
 
-							dataGridView.Rows.Add(dataGridViewRow);
+							if (!dictionary.ContainsKey(equipmentType))
+							{
+								dictionary[equipmentType] = new List<DataGridViewRow>();
+							}
+							dictionary[equipmentType].Add(dataGridViewRow);
 						}
 					}
 				}
 			}
+
+			dataGridView.Rows.AddRange(dictionary.Keys.OrderBy(i => i).SelectMany(i => dictionary[i]).ToArray());
 
 			foreach (DataGridViewColumn column in dataGridView.Columns)
 			{
