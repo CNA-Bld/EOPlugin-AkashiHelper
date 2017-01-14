@@ -106,76 +106,76 @@ namespace AkashiHelper
 				var tooltipString = string.Join("\n", holdingEquipments.GroupBy(i => i.Level).OrderBy(g => g.Key).Select(group => string.Format("★{0} ×{1}", group.Key, group.Count())));
 
 				var improvements = equipment.improvement;
-				if (improvements != null)
+				if (improvements == null)
+					continue;
+
+				int equipmentType = (int) equipment.type[3];
+				var image = ElectronicObserver.Resource.ResourceManager.Instance.Equipments.Images[equipmentType];
+
+				foreach (var improvement in improvements)
 				{
-					int equipmentType = (int) equipment.type[3];
-					var image = ElectronicObserver.Resource.ResourceManager.Instance.Equipments.Images[equipmentType];
+					var thisDay = improvement.day[(int) comboBoxWeekday.SelectedValue];
+					if (thisDay.Equals(false))
+						continue;
 
-					foreach (var improvement in improvements)
+					var upgrade = improvement.upgrade;
+
+					var dataGridViewRow = new DataGridViewRow();
+					dataGridViewRow.Cells.Add(new DataGridViewImageCell()
 					{
-						var thisDay = improvement.day[(int) comboBoxWeekday.SelectedValue];
-						if (!thisDay.Equals(false))
-						{
-							var upgrade = improvement.upgrade;
+						Value = image
+					});
 
-							var dataGridViewRow = new DataGridViewRow();
-							dataGridViewRow.Cells.Add(new DataGridViewImageCell()
-							{
-								Value = image
-							});
+					DataGridViewCell nameCell = textToCell(equipment.name);
+					nameCell.ToolTipText = tooltipString;
+					dataGridViewRow.Cells.Add(nameCell);
 
-							DataGridViewCell nameCell = textToCell(equipment.name);
-							nameCell.ToolTipText = tooltipString;
-							dataGridViewRow.Cells.Add(nameCell);
+					dataGridViewRow.Cells.Add(textToCell(upgrade == null ? "初期\n★6" : "初期\n★6\n★max"));
 
-							dataGridViewRow.Cells.Add(textToCell(upgrade == null ? "初期\n★6" : "初期\n★6\n★max"));
+					List<string> modKitStrings = new List<string>();
+					List<string> devKitStrings = new List<string>();
+					foreach (var temp in improvement.consume.useitem)
+						foreach (var thisItem in temp)
+							if ((int) thisItem.id == 4)
+								modKitStrings.Add(generateKitUsage(thisItem));
+							else if ((int)thisItem.id == 3)
+								devKitStrings.Add(generateKitUsage(thisItem));
+					if (upgrade != null)
+						foreach (var thisItem in upgrade.consume.useitem)
+							if ((int)thisItem.id == 4)
+								modKitStrings.Add(generateKitUsage(thisItem));
+							else if ((int)thisItem.id == 3)
+								devKitStrings.Add(generateKitUsage(thisItem));
+					dataGridViewRow.Cells.Add(textToCell(string.Join("\n", modKitStrings)));
+					dataGridViewRow.Cells.Add(textToCell(string.Join("\n", devKitStrings)));
 
-							List<string> modKitStrings = new List<string>();
-							List<string> devKitStrings = new List<string>();
-							foreach (var temp in improvement.consume.useitem)
-								foreach (var thisItem in temp)
-									if ((int) thisItem.id == 4)
-										modKitStrings.Add(generateKitUsage(thisItem));
-									else if ((int)thisItem.id == 3)
-										devKitStrings.Add(generateKitUsage(thisItem));
-							if (upgrade != null)
-								foreach (var thisItem in upgrade.consume.useitem)
-									if ((int)thisItem.id == 4)
-										modKitStrings.Add(generateKitUsage(thisItem));
-									else if ((int)thisItem.id == 3)
-										devKitStrings.Add(generateKitUsage(thisItem));
-							dataGridViewRow.Cells.Add(textToCell(string.Join("\n", modKitStrings)));
-							dataGridViewRow.Cells.Add(textToCell(string.Join("\n", devKitStrings)));
+					List<string> slotitemStrings = new List<string>();
+					foreach (var thisStep in improvement.consume.slotitem)
+						slotitemStrings.Add(generateSlotItemUsage(thisStep));
+					if (upgrade != null)
+						slotitemStrings.Add(generateSlotItemUsage(upgrade.consume.slotitem));
+					dataGridViewRow.Cells.Add(textToCell(string.Join("\n", slotitemStrings)));
 
-							List<string> slotitemStrings = new List<string>();
-							foreach (var thisStep in improvement.consume.slotitem)
-								slotitemStrings.Add(generateSlotItemUsage(thisStep));
-							if (upgrade != null)
-								slotitemStrings.Add(generateSlotItemUsage(upgrade.consume.slotitem));
-							dataGridViewRow.Cells.Add(textToCell(string.Join("\n", slotitemStrings)));
-
-							if (thisDay.Equals(true))
-								dataGridViewRow.Cells.Add(textToCell("-"));
-							else
-							{
-								List<string> shipStrings = new List<string>();
-								foreach (var temp in thisDay)
-									shipStrings.Add(getShipName(temp.ship_id));
-								dataGridViewRow.Cells.Add(textToCell(string.Join("\n", shipStrings)));
-							}
-
-							if (upgrade != null)
-								dataGridViewRow.Cells.Add(textToCell(getEquipmentName(upgrade.id)));
-							else
-								dataGridViewRow.Cells.Add(textToCell(""));
-
-							if (!dictionary.ContainsKey(equipmentType))
-							{
-								dictionary[equipmentType] = new List<DataGridViewRow>();
-							}
-							dictionary[equipmentType].Add(dataGridViewRow);
-						}
+					if (thisDay.Equals(true))
+						dataGridViewRow.Cells.Add(textToCell("-"));
+					else
+					{
+						List<string> shipStrings = new List<string>();
+						foreach (var temp in thisDay)
+							shipStrings.Add(getShipName(temp.ship_id));
+						dataGridViewRow.Cells.Add(textToCell(string.Join("\n", shipStrings)));
 					}
+
+					if (upgrade != null)
+						dataGridViewRow.Cells.Add(textToCell(getEquipmentName(upgrade.id)));
+					else
+						dataGridViewRow.Cells.Add(textToCell(""));
+
+					if (!dictionary.ContainsKey(equipmentType))
+					{
+						dictionary[equipmentType] = new List<DataGridViewRow>();
+					}
+					dictionary[equipmentType].Add(dataGridViewRow);
 				}
 			}
 
