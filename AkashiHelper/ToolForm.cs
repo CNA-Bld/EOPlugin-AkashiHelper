@@ -97,9 +97,13 @@ namespace AkashiHelper
 				if (plugin.settings.filteredEquipmentIds.Contains((int) equipment.id))
 					continue;
 
+				var holdingEquipments = KCDatabase.Instance.Equipments.Values.Where(i => i.EquipmentID == (int) equipment.id).ToList();
+				
 				if (plugin.settings.filterByAvailability)
-					if (KCDatabase.Instance.Equipments.Values.All(i => i.EquipmentID != (int) equipment.id))
+					if (holdingEquipments.Count == 0)
 						continue;
+
+				var tooltipString = string.Join("\n", holdingEquipments.GroupBy(i => i.Level).OrderBy(g => g.Key).Select(group => string.Format("★{0} ×{1}", group.Key, group.Count())));
 
 				var improvements = equipment.improvement;
 				if (improvements != null)
@@ -119,7 +123,11 @@ namespace AkashiHelper
 							{
 								Value = image
 							});
-							dataGridViewRow.Cells.Add(textToCell(equipment.name));
+
+							DataGridViewCell nameCell = textToCell(equipment.name);
+							nameCell.ToolTipText = tooltipString;
+							dataGridViewRow.Cells.Add(nameCell);
+
 							dataGridViewRow.Cells.Add(textToCell(upgrade == null ? "初期\n★6" : "初期\n★6\n★max"));
 
 							List<string> modKitStrings = new List<string>();
