@@ -15,21 +15,19 @@ namespace AkashiHelper
 	{
 		private AkashiHelper plugin;
 		private ToolForm toolForm;
-		private List<int> improvableEquipments;
 
-		public FilterForm(List<int> improvableEquipments, ToolForm toolForm, AkashiHelper plugin)
+		public FilterForm(ToolForm toolForm, AkashiHelper plugin)
 		{
 			InitializeComponent();
 
 			this.plugin = plugin;
 			this.toolForm = toolForm;
-			this.improvableEquipments = improvableEquipments;
 		}
 
 		private void FilterForm_Load(object sender, EventArgs e)
 		{
 			checkedListBox.DisplayMember = "Name";
-			foreach (int i in improvableEquipments)
+			foreach (int i in plugin.ImprovableEquipments)
 			{
 				checkedListBox.Items.Add(KCDatabase.Instance.MasterEquipments[i], !plugin.settings.filteredEquipmentIds.Contains(i));
 			}

@@ -18,12 +18,8 @@ namespace AkashiHelper
 {
 	public partial class ToolForm : Form
 	{
-		private bool ready = false;
-		private static string JSON_PATH = @"Data\slotitem.json";
-		private static Uri JSON_URL = new Uri("https://kcwikizh.github.io/kcdata/slotitem/all.json");
-		private dynamic json;
+		private bool ready;
 		private AkashiHelper plugin;
-		private List<int> ImprovableEquipments = new List<int>();
 
 		public ToolForm(AkashiHelper plugin)
 		{
@@ -66,61 +62,25 @@ namespace AkashiHelper
 
 			checkBoxFilterByAvailability.Checked = plugin.settings.filterByAvailability;
 
-			loadData();
+			ready = plugin.json != null;
 			RefreshData();
 		}
 
-		private void loadData()
-		{
-			if (!Directory.Exists("Data"))
-				Directory.CreateDirectory("Data");
-			if (File.Exists(JSON_PATH))
-			{
-				json = DynamicJson.Parse(File.ReadAllText(JSON_PATH));
-
-				ImprovableEquipments.Clear();
-				foreach (var equipment in json)
-				{
-					if (equipment["improvement"] != null)
-						ImprovableEquipments.Add((int)equipment["id"]);
-				}
-
-				ready = true;
-			}
-		}
 
 		private void updateData()
 		{
 			ready = false;
 			buttonUpdate.Enabled = false;
 			buttonUpdate.Text = "Updating...";
-			WebClient client = new WebClient();
-			client.Encoding = Encoding.UTF8;
-			client.DownloadFileCompleted += ClientOnDownloadFileCompleted;
-			client.DownloadFileAsync(JSON_URL, JSON_PATH);
+			plugin.UpdateData(OnUpdated);	
 		}
 
-		private void ClientOnDownloadFileCompleted(object sender, AsyncCompletedEventArgs asyncCompletedEventArgs)
+		private void OnUpdated()
 		{
 			buttonUpdate.Enabled = true;
 			buttonUpdate.Text = "Update Data";
-
-			if (asyncCompletedEventArgs.Error != null)
-			{
-				ErrorReporter.SendErrorReport(asyncCompletedEventArgs.Error, "Error when updating data.");
-				return;
-			}
-
-			loadData();
-			if (ready)
-			{
-				MessageBox.Show("Updated.");
-				RefreshData();
-			}
-			else
-			{
-				MessageBox.Show("Failed?");
-			}
+			ready = plugin.json != null;
+			RefreshData();
 		}
 
 		public void RefreshData()
@@ -130,7 +90,7 @@ namespace AkashiHelper
 
 			dataGridView.Rows.Clear();
 
-			foreach (var equipment in json)
+			foreach (var equipment in plugin.json)
 			{
 				if (plugin.settings.filteredEquipmentIds.Contains((int) equipment["id"]))
 					continue;
@@ -281,7 +241,7 @@ namespace AkashiHelper
 		private void buttonFilter_Click(object sender, EventArgs e)
 		{
 			if (ready)
-				new FilterForm(ImprovableEquipments, this, plugin).Show();
+				new FilterForm(this, plugin).Show();
 		}
 
 		private void checkBoxFilterByAvailability_CheckedChanged(object sender, EventArgs e)
