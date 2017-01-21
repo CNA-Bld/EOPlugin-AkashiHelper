@@ -150,11 +150,23 @@ namespace AkashiHelper
 					dataGridViewRow.Cells.Add(textToCell(string.Join("\n", devKitStrings)));
 
 					List<string> slotitemStrings = new List<string>();
+					List<int> slotitemIds = new List<int>();
 					foreach (var thisStep in improvement.consume.slotitem)
+					{
 						slotitemStrings.Add(generateSlotItemUsage(thisStep));
+						if (thisStep != null)
+							slotitemIds.Add((int) thisStep.id);
+					}
 					if (upgrade != null)
-						slotitemStrings.Add(generateSlotItemUsage(upgrade.consume.slotitem));
-					dataGridViewRow.Cells.Add(textToCell(string.Join("\n", slotitemStrings)));
+					{
+						var thisStep = upgrade.consume.slotitem;
+						slotitemStrings.Add(generateSlotItemUsage(thisStep));
+						if (thisStep != null)
+							slotitemIds.Add((int)thisStep.id);
+					}
+					var slotItemCell = textToCell(string.Join("\n", slotitemStrings));
+					slotItemCell.ToolTipText = string.Join("\n", slotitemIds.Distinct().Select(generateSlotItemCount));
+					dataGridViewRow.Cells.Add(slotItemCell);
 
 					if (thisDay.Equals(true))
 						dataGridViewRow.Cells.Add(textToCell("-"));
@@ -222,6 +234,12 @@ namespace AkashiHelper
 		private string generateSlotItemUsage(dynamic data)
 		{
 			return data == null ? "-" : string.Format("{0}× {1}", data.amount, getEquipmentName(data.id));
+		}
+
+		private string generateSlotItemCount(int id)
+		{
+			var items = KCDatabase.Instance.Equipments.Values.Where(i => i.EquipmentID == id).Where(i => i.Level == 0);
+			return string.Format("{0} ×{1} +{2} Locked", getEquipmentName(id), items.Count(i => !i.IsLocked), items.Count(i => i.IsLocked));
 		}
 		
 		private DataGridViewTextBoxCell textToCell(string s)
