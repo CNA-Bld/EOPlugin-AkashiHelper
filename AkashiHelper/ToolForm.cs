@@ -43,13 +43,14 @@ namespace AkashiHelper
 
 			DayOfWeek today = (DateTime.UtcNow + new TimeSpan(9, 0, 0)).DayOfWeek;
 			var weekDays = Enum.GetValues(typeof(DayOfWeek)).Cast<DayOfWeek>()
-				.Select(dow => new { Value = dow, Text = dow == today ? dow.ToString() + " (Today)" : dow.ToString() })
+				.Select(dow => new { Value = (int) dow, Text = dow == today ? dow.ToString() + " (Today)" : dow.ToString() })
 				.ToList();
+			weekDays.Add(new { Value = -1, Text = "All" });
 			comboBoxWeekday.DataSource = weekDays;
 			comboBoxWeekday.DisplayMember = "Text";
 			comboBoxWeekday.ValueMember = "Value";
 			comboBoxWeekday.Refresh();
-			comboBoxWeekday.SelectedValue = today;
+			comboBoxWeekday.SelectedValue = (int) today;
 
 			dataGridView.Columns.Add("Icon", "");
 			dataGridView.Columns.Add("Equipment", "装備");
@@ -89,6 +90,7 @@ namespace AkashiHelper
 				return;
 
 			dataGridView.Rows.Clear();
+			var selectedDay = (int) comboBoxWeekday.SelectedValue;
 
 			Dictionary<int, List<DataGridViewRow>> dictionary = new Dictionary<int, List<DataGridViewRow>>();
 
@@ -114,9 +116,13 @@ namespace AkashiHelper
 
 				foreach (var improvement in improvements)
 				{
-					var thisDay = improvement.day[(int) comboBoxWeekday.SelectedValue];
-					if (thisDay.Equals(false))
-						continue;
+					dynamic thisDay = true;
+					if (selectedDay != -1)
+					{
+						thisDay = improvement.day[selectedDay];
+						if (thisDay.Equals(false))
+							continue;
+					}
 
 					var upgrade = improvement.upgrade;
 
@@ -168,15 +174,15 @@ namespace AkashiHelper
 					slotItemCell.ToolTipText = string.Join("\n", slotitemIds.Distinct().Select(generateSlotItemCount));
 					dataGridViewRow.Cells.Add(slotItemCell);
 
-					if (thisDay.Equals(true))
-						dataGridViewRow.Cells.Add(textToCell("-"));
-					else
-					{
-						List<string> shipStrings = new List<string>();
-						foreach (var temp in thisDay)
-							shipStrings.Add(getShipName(temp.ship_id));
-						dataGridViewRow.Cells.Add(textToCell(string.Join("\n", shipStrings)));
-					}
+					var shipString = string.Join("\n", generateShipStrings(thisDay));
+					var shipCell = textToCell(shipString);
+					shipCell.ToolTipText = string.Join("\n", 
+						Enum.GetValues(typeof(DayOfWeek))
+							.Cast<DayOfWeek>()
+							.Where(d => !improvement.day[(int) d].Equals(false))
+							.Select(d => string.Format("{0} ({1})", d.ToString(),
+													   string.Join(", ", generateShipStrings(improvement.day[(int) d])))));
+					dataGridViewRow.Cells.Add(shipCell);
 
 					if (upgrade != null)
 						dataGridViewRow.Cells.Add(textToCell(getEquipmentName(upgrade.id)));
@@ -240,6 +246,16 @@ namespace AkashiHelper
 		{
 			var items = KCDatabase.Instance.Equipments.Values.Where(i => i.EquipmentID == id).Where(i => i.Level == 0);
 			return string.Format("{0} ×{1} +{2} Locked", getEquipmentName(id), items.Count(i => !i.IsLocked), items.Count(i => i.IsLocked));
+		}
+
+		private List<string> generateShipStrings(dynamic data)
+		{
+			if (data.Equals(true))
+				return new List<string>(new[] {"-"});
+			List<string> shipStrings = new List<string>();
+			foreach (var temp in data)
+				shipStrings.Add(getShipName(temp.ship_id));
+			return shipStrings;
 		}
 		
 		private DataGridViewTextBoxCell textToCell(string s)
