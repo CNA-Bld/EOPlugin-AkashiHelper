@@ -30,7 +30,7 @@ namespace AkashiHelper
 		{
 			settings = LoadSettings();
 			LoadData();
-			APIObserver.Instance["api_start2"].ResponseReceived += OnResponseReceived;
+			APIObserver.Instance["api_start2/getData"].ResponseReceived += OnResponseReceived;
 		}
 
 	    private void OnResponseReceived(string apiname, dynamic data)
