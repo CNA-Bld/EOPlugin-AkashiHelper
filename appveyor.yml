@@ -4,6 +4,8 @@ branches:
     only:
         - master
 
+skip_tags: true
+
 assembly_info:
     patch: true
     file: AssemblyInfo.*
@@ -24,3 +26,11 @@ before_build:
 artifacts:
     - path: output
       name: AkashiHelper-$(APPVEYOR_BUILD_VERSION)
+
+deploy:
+  provider: GitHub
+  auth_token:
+    secure: LRyrixQEgYtxLDVKSCkxkjmAzMS4gi+DABeBjkT1r9Tunat6Satr15XuwkCWwoY0
+  artifact: /.*/
+  on:
+    branch: master
